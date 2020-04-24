@@ -24,15 +24,41 @@ const FeedbackForm = ({ handlers }) => {
   )
 }
 
+const Statistic = ({ text, value, postText }) => (
+  <tr> 
+    <td> {text} </td> 
+    <td> {value} </td>
+  </tr>
+)
+
 const Statistics = ({ numGood, numNeutral, numBad }) => {
-  return (
-    <div>
-      <Header text="statistics" />
-      <p> good {numGood} </p>
-      <p> neutral {numNeutral} </p>
-      <p> bad {numBad} </p>
-    </div>
-  )
+  const total = numGood + numNeutral + numBad
+
+  const avg = (numGood - numBad) / total
+  const positive = numGood / total * 100
+
+  if (total === 0) {
+    return (
+      <div>
+        <Header text="statistics" />
+        <p> No feedback given </p>
+      </div>
+    )
+  } else {
+    return (
+      <div>
+        <Header text="statistics" />
+        <table><tbody>
+          <Statistic text="good"     value={numGood} />
+          <Statistic text="neutral"  value={numNeutral} />
+          <Statistic text="bad"      value={numBad} />
+          <Statistic text="all"      value={total} />
+          <Statistic text="average"  value={avg.toFixed(1)} />
+          <Statistic text="positive" value={positive.toFixed(1) + " %"} />
+        </tbody></table>
+      </div>
+    )
+  }
 }
 
 const App = () => {

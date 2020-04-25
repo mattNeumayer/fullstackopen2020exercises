@@ -10,7 +10,7 @@ const Persons = ({ persons, filterStr }) => {
       p.name.toLocaleLowerCase().includes(filterStr.toLocaleLowerCase())
     )
   } else {
-    var filteredPersons = persons
+    filteredPersons = persons
   }
 
   return (

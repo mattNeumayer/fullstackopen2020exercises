@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
+
 import Filter from  './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
+
 import personService from './services/persons'
 
 const App = () => {
@@ -10,6 +13,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterStr, setFilter] = useState('')
+  const [notification, setNotification] = useState(null)
 
   const addEntry = (event) => {
     event.preventDefault()
@@ -23,10 +27,10 @@ const App = () => {
     personService
       .createPerson(newPerson)
       .then(respPerson => {
-        console.log('Successfully added a new entry!')
         setPersons(persons.concat(respPerson))
         setNewName('')
         setNewNumber('')
+        setNotification(`Added ${respPerson.name}`)
       })
   }
 
@@ -56,13 +60,14 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={notification} />
       <h3>Phonebook</h3>
 
       <Filter setFilter={setFilter} />
 
       <h3>Add entry</h3>
 
-      <PersonForm setNewName={setNewName} setNewNumber={setNewNumber} addEntry={addEntry} />
+      <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} addEntry={addEntry} />
 
       <h3>Numbers</h3>
 

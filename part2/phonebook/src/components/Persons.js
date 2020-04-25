@@ -1,10 +1,21 @@
 import React from 'react'
 
-const DisplayEntry = ({ person }) => (
-  <div> {person.name} {person.number} </div>
-)
+const DisplayEntry = ({ person, deleteEntry}) => {
+  const handler = (event) => {
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      deleteEntry(person)
+    }
+  }
 
-const Persons = ({ persons, filterStr }) => {
+  return (
+    <div> 
+      {person.name} {person.number}
+      <button onClick={handler}> delete </button>
+    </div>
+  )
+}
+
+const Persons = ({ persons, filterStr, deleteEntry }) => {
   if (filterStr !== '') {
     var filteredPersons = persons.filter(p =>
       p.name.toLocaleLowerCase().includes(filterStr.toLocaleLowerCase())
@@ -15,7 +26,7 @@ const Persons = ({ persons, filterStr }) => {
 
   return (
     <div>
-      {filteredPersons.map(p => <DisplayEntry key={p.name} person={p} />)}
+      {filteredPersons.map(p => <DisplayEntry key={p.name} person={p} deleteEntry={deleteEntry} />)}
     </div>
   )
 }

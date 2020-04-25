@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from  './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -20,17 +20,37 @@ const App = () => {
     }
 
     const newPerson = { name: newName, number: newNumber }
-    setPersons(persons.concat(newPerson))
+    personService
+      .createPerson(newPerson)
+      .then(respPerson => {
+        console.log('Successfully added a new entry!')
+        setPersons(persons.concat(respPerson))
+        setNewName('')
+        setNewNumber('')
+      })
+  }
+
+  const deleteEntry = (person) => {
+    personService
+    .deletePerson(person)
+    .then(success => {
+      if (success) {
+        console.log('Successfully deleted entry!')
+        setPersons(persons.filter(otherP => otherP.id !== person.id))
+      } else {
+        console.log('Failed to delete entry!')
+      }
+    })
   }
 
   // Populate on inital page load
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then(response => {
-        const num = response.data.length
-        console.log(`Loaded ${num} person(s)`)
-        setPersons(response.data)
+    personService
+      .getAllPersons()
+      .then(initalPersons => {
+        const num = initalPersons.length
+        console.log(`Loaded ${num} person(s).`)
+        setPersons(initalPersons)
       })
   }, [])
 
@@ -46,7 +66,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={persons} filterStr={filterStr}/>
+      <Persons persons={persons} filterStr={filterStr} deleteEntry={deleteEntry} />
 
     </div>
   )

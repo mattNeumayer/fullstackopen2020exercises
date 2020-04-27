@@ -1,18 +1,27 @@
 const express = require('express')
+const morgan = require('morgan')
+
 let persons = require('./db.json').persons
 
 const PORT = 3001
 const MAX_ALLOWED_ID = 100000
 
-console.log(persons.find)
-
+// setup express and middleware
 const app = express()
 app.use(express.json())
 
+morgan.token('post-content', req => {
+  // on non-POST request a space is required otherwise a '-' will be displayed
+  return req.method === 'POST' ? JSON.stringify(req.body) : ' ' 
+})
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post-content'))
+
+
+// routes
 
 app.get('/info', (req, res) => {
   const numEntries = persons.length
-  console.log(persons)
   let text = `<div> Phonebook has info for ${numEntries} people </div>`
   text += `<div> ${new Date()}`
   res.send(text)

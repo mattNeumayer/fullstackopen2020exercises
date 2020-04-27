@@ -1,8 +1,14 @@
 const express = require('express')
-const personsFile = require('./db.json')
-const persons = personsFile.persons
+let persons = require('./db.json').persons
+
+const PORT = 3001
+const MAX_ALLOWED_ID = 100000
+
+console.log(persons.find)
 
 const app = express()
+app.use(express.json())
+
 
 app.get('/info', (req, res) => {
   const numEntries = persons.length
@@ -29,12 +35,38 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
-  persons = persons.find(p => p.id !== id)
+  persons = persons.filter(p => p.id !== id)
   response.status(204).end()
 })
 
+app.post('/api/persons', (request, response) => {
+  let newPerson = request.body
 
-const PORT = 3001
+  
+  if (!newPerson.number) {
+    return response.status(400).json({error: 'number missing'})
+  }
+  if (!newPerson.name) {
+    return response.status(400).json({error: 'name missing'})
+  }
+  if (persons.find(p => p.name === newPerson.name)) {
+    return response.status(400).json({error: 'name must be unique'})
+  }
+
+  const generateID = () => {
+    let id = Math.floor(Math.random() * MAX_ALLOWED_ID)
+    while (persons.find(p => p.id === id)) {
+      id = Math.floor(Math.random() * MAX_ALLOWED_ID)
+    }
+    return id
+  }
+
+  newPerson.id = generateID()
+  persons.push(newPerson)
+
+  response.json(newPerson)
+})
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

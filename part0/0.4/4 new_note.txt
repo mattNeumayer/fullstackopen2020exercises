@@ -1,0 +1,42 @@
+note over user:
+user enters $NOTE 
+user clicks 'save'
+end note
+
+user->browser: click causes action="/new_note"
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+note over server:
+the POST request contained 
+Form Data: note=$NOTE
+=> server stores the new note
+end note
+
+server-->browser: 302: Redirect to location: /notes
+
+note over browser:
+now the same requests as
+on inital page load occur
+end note
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+server-->browser: HTML-code
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+server-->browser: main.js
+
+note over browser:
+browser starts executing js-code
+that requests JSON data from server 
+end note
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+note over server:
+data.json now includes the new note
+end note
+server-->browser: [{ content: "HTML is easy", date: "2019-05-23" }, ...]
+
+note over browser:
+browser executes the event handler
+that renders notes to display
+end note

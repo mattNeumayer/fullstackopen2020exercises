@@ -1,0 +1,34 @@
+participant user
+
+note over browser:
+Note: an onSubmit handler was attached
+to the form on page load (prev. diagram)
+end note
+
+note over user:
+User enters $NOTE 
+User clicks 'save'
+end note
+
+
+
+user->browser: click triggers the onSubmit handler
+note over browser:
+1. The handler creates timestamp, adds the 
+note to the local notes and redraws the notes.
+end note
+note over browser:
+2. The handler also creates a POST request
+containing the new note and timestamp.
+Payload (application/json):
+{ 
+  "content": "$NOTE",
+  "date": "2020-04-27T15:37:13.098Z"
+}
+end note
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+note over server:
+server stores note
+end note
+
+server-->browser: 201: {"message":"note created"}

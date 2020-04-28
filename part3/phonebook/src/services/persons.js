@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost:3001/api/persons'
+const BASE_URL = 'https://nameless-caverns-31086.herokuapp.com/api/persons'
 
 const createPerson = (person) => {
   return axios

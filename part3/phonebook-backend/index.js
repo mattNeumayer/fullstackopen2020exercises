@@ -1,20 +1,21 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 
 let persons = require('./db.json').persons
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 const MAX_ALLOWED_ID = 100000
 
 // setup express and middleware
 const app = express()
+app.use(cors())
 app.use(express.json())
 
 morgan.token('post-content', req => {
   // on non-POST request a space is required otherwise a '-' will be displayed
   return req.method === 'POST' ? JSON.stringify(req.body) : ' ' 
 })
-
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post-content'))
 
 

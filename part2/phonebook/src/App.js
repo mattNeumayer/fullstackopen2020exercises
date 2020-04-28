@@ -18,33 +18,49 @@ const App = () => {
   const addEntry = (event) => {
     event.preventDefault()
 
-    if (persons.some(p => p.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
+    const oldPerson = persons.find(p => p.name === newName)
 
-    const newPerson = { name: newName, number: newNumber }
-    personService
-      .createPerson(newPerson)
-      .then(respPerson => {
-        setPersons(persons.concat(respPerson))
-        setNewName('')
-        setNewNumber('')
-        setNotification(`Added ${respPerson.name}`)
-      })
+    if (oldPerson) {
+      // Entry already exists, ask if we should update the number
+      if (window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)) {
+        let newPerson = {...oldPerson, number: newNumber}
+        console.log(newPerson)
+        personService
+          .updatePerson(newPerson)
+          .then(respPerson => {
+            // update the old entry in our state with respPerson
+            let personsCopy = [...persons]
+            const index = personsCopy.findIndex(p => p.name === respPerson.name)
+            personsCopy[index] = respPerson
+            setPersons(personsCopy)
+            setNewName('')
+            setNewNumber('')
+          })
+      }
+    } else {
+      let newPerson = {number: newNumber, name: newName}
+      personService
+        .createPerson(newPerson)
+        .then(respPerson => {
+          setPersons(persons.concat(respPerson))
+          setNewName('')
+          setNewNumber('')
+          setNotification(`Added ${respPerson.name}`)
+        })
+    }
   }
 
   const deleteEntry = (person) => {
     personService
-    .deletePerson(person)
-    .then(success => {
-      if (success) {
-        console.log('Successfully deleted entry!')
-        setPersons(persons.filter(otherP => otherP.id !== person.id))
-      } else {
-        console.log('Failed to delete entry!')
-      }
-    })
+      .deletePerson(person)
+      .then(success => {
+        if (success) {
+          console.log('Successfully deleted entry!')
+          setPersons(persons.filter(otherP => otherP.id !== person.id))
+        } else {
+          console.log('Failed to delete entry!')
+        }
+      })
   }
 
   // Populate on inital page load

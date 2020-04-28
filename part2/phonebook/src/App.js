@@ -23,8 +23,7 @@ const App = () => {
     if (oldPerson) {
       // Entry already exists, ask if we should update the number
       if (window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)) {
-        let newPerson = {...oldPerson, number: newNumber}
-        console.log(newPerson)
+        let newPerson = { ...oldPerson, number: newNumber }
         personService
           .updatePerson(newPerson)
           .then(respPerson => {
@@ -36,16 +35,22 @@ const App = () => {
             setNewName('')
             setNewNumber('')
           })
+          .catch(error => {
+            setNotification({ message: `Information of ${oldPerson.name} has already been removed from server`, style: 'error' })
+            setNewName('')
+            setNewNumber('')
+            setPersons(persons.filter(otherP => otherP.id !== oldPerson.id))
+          })
       }
     } else {
-      let newPerson = {number: newNumber, name: newName}
+      let newPerson = { number: newNumber, name: newName }
       personService
         .createPerson(newPerson)
         .then(respPerson => {
           setPersons(persons.concat(respPerson))
           setNewName('')
           setNewNumber('')
-          setNotification(`Added ${respPerson.name}`)
+          setNotification({ message: `Added ${respPerson.name}`, style: 'info' })
         })
     }
   }
@@ -76,7 +81,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={notification} />
+      <Notification notification={notification} />
       <h3>Phonebook</h3>
 
       <Filter setFilter={setFilter} />

@@ -6,12 +6,17 @@ const createPerson = (person) => {
     .then(resp => resp.data)
 }
 
-
 const deletePerson = (person) => {
   return axios
     .delete('http://localhost:3001/persons/' + person.id)
     .then(resp => true)
     .catch(() => false)
+}
+
+const updatePerson = (person) => {
+  return axios
+    .put('http://localhost:3001/persons/' + person.id, person)
+    .then(resp => resp.data)
 }
 
 const getAllPersons = () => {
@@ -20,4 +25,4 @@ const getAllPersons = () => {
   .then(resp => resp.data)
 }
 
-export default {createPerson, getAllPersons, deletePerson}
+export default {createPerson, getAllPersons, deletePerson, updatePerson}

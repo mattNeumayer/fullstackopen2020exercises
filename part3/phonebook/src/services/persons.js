@@ -1,8 +1,7 @@
 import axios from 'axios'
 
-//const BASE_URL = 'https://nameless-caverns-31086.herokuapp.com'
-const API_RELATIVE = '/api/persons'
-const API_URL = BASE_URL + API_RELATIVE
+//const API_URL = 'https://nameless-caverns-31086.herokuapp.com/api/persons'
+const API_URL = '/api/persons'
 
 const createPerson = (person) => {
   return axios

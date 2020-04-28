@@ -17,3 +17,4 @@
 ## Part 3
 - [x] Exercises 3.1-3.6
 - [x] Exercises 3.7-3.8
+- [x] Exercises 3.9-3.11

@@ -10,6 +10,7 @@ const MAX_ALLOWED_ID = 100000
 // setup express and middleware
 const app = express()
 app.use(cors())
+app.use(express.static('build'))
 app.use(express.json())
 
 morgan.token('post-content', req => {

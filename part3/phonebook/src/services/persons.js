@@ -1,29 +1,31 @@
 import axios from 'axios'
 
-const BASE_URL = 'https://nameless-caverns-31086.herokuapp.com/api/persons'
+//const BASE_URL = 'https://nameless-caverns-31086.herokuapp.com'
+const API_RELATIVE = '/api/persons'
+const API_URL = BASE_URL + API_RELATIVE
 
 const createPerson = (person) => {
   return axios
-    .post(BASE_URL, person)
+    .post(API_URL, person)
     .then(resp => resp.data)
 }
 
 const deletePerson = (person) => {
   return axios
-    .delete(`${BASE_URL}/${person.id}`)
+    .delete(`${API_URL}/${person.id}`)
     .then(resp => true)
     .catch(() => false)
 }
 
 const updatePerson = (person) => {
   return axios
-    .put(BASE_URL + person.id, person)
+    .put(API_URL + person.id, person)
     .then(resp => resp.data)
 }
 
 const getAllPersons = () => {
   return axios
-  .get(BASE_URL)
+  .get(API_URL)
   .then(resp => resp.data)
 }
 
